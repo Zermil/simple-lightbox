@@ -13,22 +13,39 @@
       text-align: center;
     }
 
-    #gallery {
+    .gallery {
       padding: 5px;
+    }
+
+    .container {
+      width: 80%;
+      margin: 0 auto;
     }
   </style>
 </head>
 <body>
-  <h1>simple-lightbox</h1>
-  <div id="gallery"></div>
+  <div class="container">
+    <h1>simple-lightbox</h1>
+
+    <h2>Gallery no. 1</h2>
+    <div class="gallery" id="gallery-one"></div>
+
+    <h2>Gallery no. 2</h2>
+    <div class="gallery" id="gallery-two"></div>
+  </div>
 
 <script src="./lightbox.js"></script>
 <script>
   window.onload = () => {
     
-    createLightbox({
-      target: "gallery",
-      photos_dir: "./photos"
+    createGallery({
+      target: "gallery-one",
+      photos_dir: "./photos/gallery-one"
+    });
+
+    createGallery({
+      target: "gallery-two",
+      photos_dir: "./photos/gallery-two"
     });
 
   }
