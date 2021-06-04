@@ -4,7 +4,7 @@ Small JavaScript library/framework, mostly for personal use, used to create smal
 
 ## Quick start/Instructions
 
-I don't know why you would want to use it... but a simple demo can be found in "[index.html](https://github.com/Zermil/simple-lightbox)" it also has "customizable" CSS so suit yourself. 
+I don't know why you would want to use it... but a simple demo can be found in "[index.html](https://github.com/Zermil/simple-lightbox/blob/master/index.html)" it also has "customizable" CSS so suit yourself. 
 
 **NOTE** that it needs some sort of "server" to run, because of XML request.
 
