@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./lightbox.css" />
+  <title>simple-lightbox</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      font-size: 22px;
+      text-align: center;
+    }
+
+    #gallery {
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>simple-lightbox</h1>
+  <div id="gallery"></div>
+
+<script src="./lightbox.js"></script>
+<script>
+  window.onload = () => {
+    
+    createLightbox({
+      target: "gallery",
+      photos_dir: "./photos"
+    });
+
+  }
+</script>
+</body>
+</html>
