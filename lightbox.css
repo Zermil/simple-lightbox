@@ -1,4 +1,4 @@
-.custom-photoLB {
+.lightbox-photoLB {
   max-width: 250px;
   max-height: 350px;
   width: auto;
@@ -31,7 +31,7 @@
   cursor: pointer;
 }
 
-.lightbox-image-containerLB {
+.lightbox-photo-containerLB {
   position: fixed;
   z-index: 10;
   top: 50%;
@@ -39,7 +39,7 @@
   transform: translate(-50%, -50%);
 }
 
-.custom-photo-enlargeLB {
+.lightbox-photo-enlargeLB {
   object-fit: cover;
   border: 4px solid #fff;
   border-radius: 3px;

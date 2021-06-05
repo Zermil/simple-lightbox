@@ -21,14 +21,10 @@ I don't know why you would want to use it... but a simple demo can be found in "
 
 <script src="./lightbox.js"></script>
 <script>
-  window.onload = () => {
-    
-    createGallery({
-      target: "gallery",
-      photos_dir: "./photos"
-    });
-
-  }
+  createGallery({
+    target: "gallery",
+    photos_dir: "./photos"
+  });
 </script>
 </body>
 </html>

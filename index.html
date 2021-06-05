@@ -35,20 +35,16 @@
   </div>
 
 <script src="./lightbox.js"></script>
-<script>
-  window.onload = () => {
-    
-    createGallery({
-      target: "gallery-one",
-      photos_dir: "./photos/gallery-one"
-    });
+<script>    
+  createGallery({
+    target: "gallery-one",
+    photos_directory: "./photos/gallery-one"
+  });
 
-    createGallery({
-      target: "gallery-two",
-      photos_dir: "./photos/gallery-two"
-    });
-
-  }
+  createGallery({
+    target: "gallery-two",
+    photos_directory: "./photos/gallery-two"
+  });
 </script>
 </body>
 </html>
