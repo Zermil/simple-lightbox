@@ -9,14 +9,34 @@ function LB() {
 // Utilities
 LB.prototype.createTag = function(tag, className) {
   const element = document.createElement(tag);
+  element.className = className;
 
   element.LBatt = function(name, value) {
     this.setAttribute(name, value);
     return this;
   }
 
-  if (className) {
-    element.className = className;
+  element.LBhtml = function(html) {
+    this.innerHTML = html;
+    return this;
+  }
+
+  element.LBstyle = function(style) {
+    this.style = style;
+    return this;
+  }
+
+  element.LBchildren = function(...children) {
+    for (const child of children) {
+      this.appendChild(child);
+    }
+
+    return this;
+  }
+
+  element.LBclick = function(clickEvent) {
+    this.onclick = clickEvent;
+    return this;
   }
 
   return element;
@@ -31,28 +51,37 @@ LB.prototype.closeLightboxComponent = function() {
     document.querySelector(".lightboxLB")
   );
 }
+//=========================
 
 LB.prototype.createLightboxComponent = function(element) {
-  const lightbox = this.createTag("div", "lightboxLB");
-  const lightboxPhotoContainer = this.createTag("div", "lightbox-photo-containerLB");
+  const lightbox = this.createTag("div", "lightboxLB")
+    .LBclick(this.closeLightboxComponent);
 
+  
+  const closeButton = this.createTag("span", "lightbox-close-buttonLB")
+    .LBhtml("&times;")
+    .LBclick(this.closeLightboxComponent);
+
+  const controlPanel = this.createTag("div", "lightbox-controlLB")
+    .LBchildren(closeButton);
+    
   const lightboxPhoto = this.createTag("img", "lightbox-photo-enlargeLB")
     .LBatt("src", element.src)
-    .LBatt("alt", `large_${element.alt}`);
-
-  // Scale images so that they don't cover the entire screen if they are too big
-  lightboxPhoto.style.maxHeight = `${screen.height * this.options.photos_scale}px`;
-  lightboxPhoto.style.maxWidth = `${screen.width * this.options.photos_scale}px`;
-
-  lightbox.onclick = () => this.closeLightboxComponent();
+    .LBatt("alt", `large_${element.alt}`)
+    .LBstyle(
+      // Scale images so that they don't cover the entire screen if they are too big
+      `max-width: ${screen.width * this.options.photos_scale}px; 
+       max-height: ${screen.height * this.options.photos_scale}px;`
+    );
   
   // Append everything
-  lightboxPhotoContainer.appendChild(lightboxPhoto);
-
   document.body.appendChild(lightbox);
-  document.body.appendChild(lightboxPhotoContainer);
+  
+  document.body.appendChild(
+    this.createTag("div", "lightbox-photo-containerLB")
+      .LBchildren(controlPanel, lightboxPhoto)
+  );
 }
-//=========================
 
 LB.prototype.errorCheck = function() {
   const errorMessages = [];
@@ -101,7 +130,7 @@ LB.prototype.fetchAndAppendPhotosFromDirectory = function() {
         .filter(photo => photo.href.match(/\.(jpe?g|png)$/i))
         .map(photo => photo = {
           src: photo.href,
-          alt: photo.title
+          alt: photo.title.split('.')[0]
         });
 
       _this.appendPhotos(allPhotos);
