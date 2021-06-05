@@ -9,7 +9,10 @@ function LB() {
 // Utilities
 LB.prototype.createTag = function(tag, className) {
   const element = document.createElement(tag);
-  element.className = className;
+  
+  if (className) {
+    element.className = className;
+  }
 
   element.LBatt = function(name, value) {
     this.setAttribute(name, value);
