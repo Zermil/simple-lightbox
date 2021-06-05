@@ -52,16 +52,6 @@ LB.prototype.createLightboxComponent = function(element) {
   document.body.appendChild(lightbox);
   document.body.appendChild(lightboxPhotoContainer);
 }
-
-LB.prototype.addImg = function(photo) {
-  const img = this.createTag("img", "lightbox-photoLB")
-    .LBatt("src", photo.src)
-    .LBatt("alt", photo.alt);
-
-  img.onclick = () => this.createLightboxComponent(photo);
-
-  return img;
-}
 //=========================
 
 LB.prototype.errorCheck = function() {
@@ -80,6 +70,20 @@ LB.prototype.errorCheck = function() {
   }
 
   return errorMessages;
+}
+
+LB.prototype.appendPhotos = function(photos) {
+  const target = document.getElementById(this.options.target);
+
+  for (const photo of photos) {
+    const img = this.createTag("img", "lightbox-photoLB")
+      .LBatt("src", photo.src)
+      .LBatt("alt", photo.alt);
+    
+    img.onclick = () => this.createLightboxComponent(photo);
+
+    target.appendChild(img);
+  }
 }
 
 LB.prototype.fetchAndAppendPhotosFromDirectory = function() {
@@ -114,14 +118,6 @@ LB.prototype.fetchAndAppendPhotosFromDirectory = function() {
   xhr.send();
 }
 
-LB.prototype.appendPhotos = function(photos) {
-  const target = document.getElementById(this.options.target);
-
-  for (const photo of photos) {
-    target.appendChild(this.addImg(photo));
-  }
-}
-
 LB.prototype.initialize = function(initializeOptions) {
   Object.assign(this.options, initializeOptions);
 
@@ -136,7 +132,7 @@ LB.prototype.initialize = function(initializeOptions) {
   this.fetchAndAppendPhotosFromDirectory();
 }
 
-// Finicky but it works
+// Feels weird but it works ugh...
 function createGallery(initializeOptions) { 
   new LB().initialize(initializeOptions); 
 }
