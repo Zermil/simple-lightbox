@@ -22,6 +22,10 @@
       margin: 0 auto;
     }
 
+    button {
+      cursor: pointer;
+    }
+
     @media screen and (max-width: 360px) {
       h1 {
         font-size: 25px;
@@ -40,6 +44,10 @@
     </h1>
 
     <h2>Gallery no. 1</h2>
+    
+    <button>1</button>
+    <button>2</button>
+    
     <div class="gallery" id="gallery-one"></div>
 
     <h2>Gallery no. 2</h2>
@@ -47,10 +55,32 @@
   </div>
 
 <script src="./lightbox.js"></script>
-<script>    
-  LBcreateGallery({
+<script>
+  const galleryOne = LBcreateGallery({
     target: "gallery-one",
-    photos_directory: "./photos/gallery-one"
+    photos_directory: "./photos/gallery-one/1"
+  });
+
+  document.querySelectorAll("button").forEach(button => {
+    button.addEventListener("click", function() {
+      const section = this.innerText;
+      const target = document.getElementById(galleryOne.options.target);
+
+      switch (section) {
+        case "1":
+          galleryOne.options.photos_directory = "./photos/gallery-one/1";
+          break;
+        case "2":
+          galleryOne.options.photos_directory = "./photos/gallery-one/2";
+          break;
+      }
+
+      while (target.firstChild) {
+        target.removeChild(target.firstChild);
+      }
+
+      galleryOne.fetchAndAppendPhotosFromDirectory();
+    });
   });
 
   LBcreateGallery({

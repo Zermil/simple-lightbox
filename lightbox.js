@@ -148,7 +148,7 @@ LB.prototype.fetchAndAppendPhotosFromDirectory = function() {
   xhr.send();
 }
 
-LB.prototype.initialize = function(initializeOptions) {
+LB.prototype.initializeGallery = function(initializeOptions) {
   Object.assign(this.options, initializeOptions);
 
   // Error check could be improved
@@ -165,5 +165,8 @@ LB.prototype.initialize = function(initializeOptions) {
 // Wrapper function
 // Feels weird but it works ugh...
 function LBcreateGallery(initializeOptions) { 
-  new LB().initialize(initializeOptions); 
+  const instance = new LB();
+  instance.initializeGallery(initializeOptions);
+
+  return instance;
 }
