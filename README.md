@@ -14,6 +14,8 @@ I don't know why would someone want to use it, but a simple demo can be found in
 
 **NOTE** that it needs some sort of "server" to run (website needs to be hosted somewhere, it can be hosted locally when you are testing), because of XML request.
 
+Get started template:
+
 ```html
 <!DOCTYPE html>
 <html>
