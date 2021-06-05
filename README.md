@@ -27,9 +27,9 @@ I don't know why would someone want to use it, but a simple demo can be found in
 
 <script src="./lightbox.js"></script>
 <script>
-	LBcreateGallery({
-		photos_directory: "./photos"
-	});
+  LBcreateGallery({
+    photos_directory: "./photos"
+  });
 </script>
 </body>
 </html>
