@@ -132,7 +132,8 @@ LB.prototype.initialize = function(initializeOptions) {
   this.fetchAndAppendPhotosFromDirectory();
 }
 
+// Wrapper function
 // Feels weird but it works ugh...
-function createGallery(initializeOptions) { 
+function LBcreateGallery(initializeOptions) { 
   new LB().initialize(initializeOptions); 
 }

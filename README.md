@@ -4,7 +4,7 @@ Small JavaScript library/framework, mostly for personal use, I use it to create 
 
 ## Quick start/Instructions
 
-I don't know why you would want to use it... but a simple demo can be found in "[index.html](https://github.com/Zermil/simple-lightbox/blob/master/index.html)" it also has "customizable" CSS so suit yourself. 
+I don't know why you would want to use it, but a simple demo can be found in "[index.html](https://github.com/Zermil/simple-lightbox/blob/master/index.html)" it also has "customizable" CSS so suit yourself. 
 
 **NOTE** that it needs some sort of "server" to run (website needs to be hosted somewhere), because of XML request.
 
@@ -21,11 +21,12 @@ I don't know why you would want to use it... but a simple demo can be found in "
 
 <script src="./lightbox.js"></script>
 <script>
-  createGallery({
-    target: "gallery",
-    photos_dir: "./photos"
-  });
+  LBcreateGallery();
 </script>
 </body>
 </html>
 ```
+
+## Mini DOCs:
+
+To be added
