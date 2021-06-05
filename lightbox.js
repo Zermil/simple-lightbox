@@ -59,7 +59,7 @@ LB.prototype.errorCheck = function() {
 
   if (!(document.getElementById(this.options.target))) {
     errorMessages.push(
-      `Gallery: '${this.options.target}' -> specified 'target' id does not exist`
+      `Gallery: '${this.options.target}' -> DOM element with specified 'target' id does not exist`
     );
   }
 
@@ -109,7 +109,7 @@ LB.prototype.fetchAndAppendPhotosFromDirectory = function() {
     } else {
 
       console.error(
-        `Gallery: '${_this.options.target}' -> Failed to fetch photos from specified path (photos_directory): '${_this.options.photos_directory}'`
+        `Gallery: '${_this.options.target}' -> Failed to fetch photos from specified 'path' (photos_directory): '${_this.options.photos_directory}'`
       );
       
     }
