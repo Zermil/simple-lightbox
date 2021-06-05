@@ -106,9 +106,8 @@ LB.prototype.appendPhotos = function(photos) {
   for (const photo of photos) {
     const img = this.createTag("img", "lightbox-photoLB")
       .LBatt("src", photo.src)
-      .LBatt("alt", photo.alt);
-    
-    img.onclick = () => this.createLightboxComponent(photo);
+      .LBatt("alt", photo.alt)
+      .LBclick(_ => this.createLightboxComponent(photo));
 
     target.appendChild(img);
   }

@@ -1,11 +1,16 @@
 .lightbox-photoLB {
-  max-width: 250px;
-  max-height: 350px;
-  width: auto;
-  height: auto;
+  width: 250px;
+  height: 250px;
   object-fit: cover;
   margin: 10px;
   cursor: pointer;
+}
+
+@media screen and (max-width: 360px) {
+  .lightbox-photoLB {
+    width: 120px;
+    height: 120px;
+  }
 }
 
 .lightboxLB {
