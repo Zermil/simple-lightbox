@@ -54,17 +54,13 @@ LB.prototype.closeLightboxComponent = function() {
 //=========================
 
 LB.prototype.createLightboxComponent = function(element) {
-  const lightbox = this.createTag("div", "lightboxLB")
-    .LBclick(this.closeLightboxComponent);
-
-  
-  const closeButton = this.createTag("span", "lightbox-close-buttonLB")
-    .LBhtml("&times;")
-    .LBclick(this.closeLightboxComponent);
-
   const controlPanel = this.createTag("div", "lightbox-controlLB")
-    .LBchildren(closeButton);
-    
+    .LBchildren(
+      this.createTag("span", "lightbox-close-buttonLB")
+        .LBhtml("&times;")
+        .LBclick(this.closeLightboxComponent)
+    );
+
   const lightboxPhoto = this.createTag("img", "lightbox-photo-enlargeLB")
     .LBatt("src", element.src)
     .LBatt("alt", `large_${element.alt}`)
@@ -75,7 +71,10 @@ LB.prototype.createLightboxComponent = function(element) {
     );
   
   // Append everything
-  document.body.appendChild(lightbox);
+  document.body.appendChild(
+    this.createTag("div", "lightboxLB")
+      .LBclick(this.closeLightboxComponent)
+  );
   
   document.body.appendChild(
     this.createTag("div", "lightbox-photo-containerLB")
