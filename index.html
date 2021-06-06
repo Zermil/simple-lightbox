@@ -83,18 +83,10 @@
 
   document.querySelectorAll(".btn").forEach(button => {
     button.addEventListener("click", function() {
-      const section = this.innerText;
       const target = document.getElementById(galleryOne.options.target);
-
-      switch (section) {
-        case "1":
-          galleryOne.options.photos_directory = "./photos/gallery-one/1";
-          break;
-        case "2":
-          galleryOne.options.photos_directory = "./photos/gallery-one/2";
-          break;
-      }
-
+      galleryOne.options.photos_directory = "./photos/gallery-one/" + this.innerText;
+      
+      // Clear
       while (target.firstChild) {
         target.removeChild(target.firstChild);
       }
