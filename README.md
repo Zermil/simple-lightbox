@@ -8,6 +8,8 @@ Small JavaScript "framework", mostly for personal use, used to create small gall
 - [lightgallery.js](https://github.com/sachinchoolur/lightgallery.js/)
 - [glightbox](https://github.com/biati-digital/glightbox)
 
+Photos in demo: Courtesy of [Unsplash](https://unsplash.com/)
+
 ## Quick start/Instructions
 
 I don't know why would someone want to use it, but a simple demo can be found in "[index.html](https://github.com/Zermil/simple-lightbox/blob/master/index.html)" it also has "customizable" CSS so suit yourself. 
@@ -39,7 +41,7 @@ Get started template:
 
 ## Mini DOCs:
 
-**`LBcreateGallery(initializeOptions)`**: Main function generating gallery, possible 'initializeOptions' are:
+**`LBcreateGallery(initializeOptions)`**: Main function generating gallery, possible `'initializeOptions'` are:
 - `target`: [DOM element ID, preferably div's] Specifies where to display photos.
 - `photos_directory`: Path to a folder containing all photos.
 - `photos_scale`: [1 > preferably > 0] Value by which to scale all 'enlarged' photos. (photos within lightbox after you click on them)

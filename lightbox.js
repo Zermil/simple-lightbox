@@ -35,6 +35,11 @@ window.LButils = {
       return this;
     }
 
+    element.LBtext = function(s) {
+      this.innerText = s;
+      return this;
+    }
+
     return element;
   },
 
@@ -107,7 +112,7 @@ LB.prototype.appendPhotos = function(photos) {
 
     fragment.appendChild(img);
   }
-  
+
   target.appendChild(fragment);
 
   // Responsive images
