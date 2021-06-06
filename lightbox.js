@@ -1,88 +1,145 @@
-function LB() {
-  this.options = {
-    target: "gallery",
-    photos_directory: "./photos",
-    photos_scale: 0.75
-  };
-}
-
 // Utilities
-LB.prototype.createTag = function(tag, className) {
-  const element = document.createElement(tag);
+window.LButils = {
+  createTag: function(tag, className) {
+    const element = document.createElement(tag);
   
-  if (className) {
-    element.className = className;
-  }
-
-  element.LBatt = function(name, value) {
-    this.setAttribute(name, value);
-    return this;
-  }
-
-  element.LBhtml = function(html) {
-    this.innerHTML = html;
-    return this;
-  }
-
-  element.LBstyle = function(style) {
-    this.style = style;
-    return this;
-  }
-
-  element.LBchildren = function(...children) {
-    for (const child of children) {
-      this.appendChild(child);
+    if (className) {
+      element.className = className;
     }
 
-    return this;
+    element.LBatt = function(name, value) {
+      this.setAttribute(name, value);
+      return this;
+    }
+
+    element.LBhtml = function(html) {
+      this.innerHTML = html;
+      return this;
+    }
+
+    element.LBstyle = function(style) {
+      this.style.cssText = style;
+      return this;
+    }
+
+    element.LBchildren = function(...children) {
+      for (const child of children) {
+        this.appendChild(child);
+      }
+
+      return this;
+    }
+
+    element.LBclick = function(clickEvent) {
+      this.onclick = clickEvent;
+      return this;
+    }
+
+    return element;
+  },
+
+  createLightboxComponent: function(element) {
+    const controlPanel = LButils.createTag("div", "lightbox-controlLB")
+      .LBchildren(
+        LButils.createTag("span", "lightbox-close-buttonLB")
+          .LBhtml("&times;")
+          .LBclick(LButils.closeLightboxComponent)
+      );
+
+    // Append everything
+    document.body.appendChild(
+      LButils.createTag("div", "lightboxLB")
+        .LBclick(LButils.closeLightboxComponent)
+    );
+    
+    document.body.appendChild(
+      LButils.createTag("div", "lightbox-containerLB")
+        .LBchildren(controlPanel, element)
+    );
+  },
+
+  closeLightboxComponent: function() {
+    document.body.removeChild(
+      document.querySelector(".lightbox-containerLB")
+    );
+  
+    document.body.removeChild(
+      document.querySelector(".lightboxLB")
+    );
   }
-
-  element.LBclick = function(clickEvent) {
-    this.onclick = clickEvent;
-    return this;
-  }
-
-  return element;
-}
-
-LB.prototype.closeLightboxComponent = function() {
-  document.body.removeChild(
-    document.querySelector(".lightbox-photo-containerLB")
-  );
-
-  document.body.removeChild(
-    document.querySelector(".lightboxLB")
-  );
-}
+};
 //=========================
 
-LB.prototype.createLightboxComponent = function(element) {
-  const controlPanel = this.createTag("div", "lightbox-controlLB")
-    .LBchildren(
-      this.createTag("span", "lightbox-close-buttonLB")
-        .LBhtml("&times;")
-        .LBclick(this.closeLightboxComponent)
-    );
+const LBdefaults = {
+  target: "gallery",
+  photos_directory: "./photos",
+  photos_scale: 0.75
+};
 
-  const lightboxPhoto = this.createTag("img", "lightbox-photo-enlargeLB")
-    .LBatt("src", element.src)
-    .LBatt("alt", `large_${element.alt}`)
-    .LBstyle(
-      // Scale images so that they don't cover the entire screen if they are too big
-      `max-width: ${screen.width * this.options.photos_scale}px; 
-       max-height: ${screen.height * this.options.photos_scale}px;`
-    );
-  
-  // Append everything
-  document.body.appendChild(
-    this.createTag("div", "lightboxLB")
-      .LBclick(this.closeLightboxComponent)
-  );
-  
-  document.body.appendChild(
-    this.createTag("div", "lightbox-photo-containerLB")
-      .LBchildren(controlPanel, lightboxPhoto)
-  );
+function LB(initializeOptions = {}) {
+  this.options = Object.assign({}, LBdefaults, initializeOptions);
+}
+
+LB.prototype.appendPhotos = function(photos) {
+  const target = document.getElementById(this.options.target);
+  const fragment = document.createDocumentFragment();
+
+  for (const photo of photos) {
+    const lightboxPhoto = LButils.createTag("img", "lightbox-photo-enlargeLB")
+      .LBatt("src", photo.src)
+      .LBatt("alt", `large_${photo.alt}`)
+      .LBstyle(
+        // Scale images so that they don't cover the entire screen if they are too big
+        `max-width: ${screen.width * this.options.photos_scale}px; 
+        max-height: ${screen.height * this.options.photos_scale}px;`
+      );
+
+    const img = LButils.createTag("img", "lightbox-photoLB")
+      .LBatt("src", photo.src)
+      .LBatt("alt", photo.alt)
+      .LBclick(_ => LButils.createLightboxComponent(lightboxPhoto));
+
+    fragment.appendChild(img);
+  }
+
+  target.appendChild(fragment);
+}
+
+LB.prototype.fetchAndAppendPhotosFromDirectory = function() {
+  const _this = this;
+
+  // Why is web-development like this...
+  const xhr = new XMLHttpRequest();
+  xhr.open("GET", this.options.photos_directory);
+  xhr.responseType = "document";
+
+  xhr.onload = function() {
+    if (this.status === 200) {
+
+      const allPhotos = [...this.response.getElementsByTagName('a')]
+        .filter(photo => photo.href.match(/\.(jpe?g|png)$/i))
+        .map(photo => photo = {
+          src: photo.href,
+          alt: photo.title.split('.')[0]
+        });
+      
+      /*
+        * You need a callback function like this
+        * otherwise you can't "retrive" photos
+        * yay web-dev/js
+      */
+      _this.appendPhotos(allPhotos);
+
+    } else {
+
+      console.error(
+        `Gallery: '${_this.options.target}' -> Failed to fetch photos from specified 'path' (photos_directory): '${_this.options.photos_directory}'`
+      );
+
+    }
+  }
+
+  xhr.send();
 }
 
 LB.prototype.errorCheck = function() {
@@ -103,59 +160,15 @@ LB.prototype.errorCheck = function() {
   return errorMessages;
 }
 
-LB.prototype.appendPhotos = function(photos) {
-  const target = document.getElementById(this.options.target);
-
-  for (const photo of photos) {
-    const img = this.createTag("img", "lightbox-photoLB")
-      .LBatt("src", photo.src)
-      .LBatt("alt", photo.alt)
-      .LBclick(_ => this.createLightboxComponent(photo));
-
-    target.appendChild(img);
-  }
-}
-
-LB.prototype.fetchAndAppendPhotosFromDirectory = function() {
-  const _this = this;
-
-  // Why is web-development like this...
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", this.options.photos_directory);
-  xhr.responseType = "document";
-
-  xhr.onload = function() {
-    if (this.status === 200) {
-
-      const allPhotos = [...this.response.getElementsByTagName('a')]
-        .filter(photo => photo.href.match(/\.(jpe?g|png)$/i))
-        .map(photo => photo = {
-          src: photo.href,
-          alt: photo.title.split('.')[0]
-        });
-
-      _this.appendPhotos(allPhotos);
-
-    } else {
-
-      console.error(
-        `Gallery: '${_this.options.target}' -> Failed to fetch photos from specified 'path' (photos_directory): '${_this.options.photos_directory}'`
-      );
-      
-    }
-  }
-
-  xhr.send();
-}
-
-LB.prototype.initializeGallery = function(initializeOptions) {
-  Object.assign(this.options, initializeOptions);
-
+LB.prototype.initializeGallery = function() {
   // Error check could be improved
   const errorMessages = this.errorCheck();
 
-  if (errorMessages.length > 0) {
-    for (const errorMsg of errorMessages) console.error(errorMsg);
+  if (errorMessages.length) {
+    for (const errorMsg of errorMessages) {
+      console.error(errorMsg);
+    }
+
     return;
   }
   
@@ -163,10 +176,10 @@ LB.prototype.initializeGallery = function(initializeOptions) {
 }
 
 // Wrapper function
-// Feels weird but it works ugh...
-function LBcreateGallery(initializeOptions) { 
-  const instance = new LB();
-  instance.initializeGallery(initializeOptions);
+// Feels weird and wrong, but it works ugh...
+function LBcreateGallery(initializeOptions) {
+  const instance = new LB(initializeOptions);
+  instance.initializeGallery();
 
   return instance;
 }
