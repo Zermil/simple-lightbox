@@ -43,25 +43,29 @@
       simple-lightbox <span style="color: #2a82b5;">DEMO</span>
     </h1>
 
-    <h2>Gallery no. 1</h2>
+    <h2>Gallery with sections</h2>
     
-    <button>1</button>
-    <button>2</button>
+    <button class="btn">1</button>
+    <button class="btn">2</button>
     
     <div class="gallery" id="gallery-one"></div>
 
-    <h2>Gallery no. 2</h2>
+    <h2>Gallery standalone</h2>
     <div class="gallery" id="gallery-two"></div>
+
+    <h2>Modal</h2>
+    <button id="modal">Open Modal</button>
   </div>
 
 <script src="./lightbox.js"></script>
 <script>
+  // Sections
   const galleryOne = LBcreateGallery({
     target: "gallery-one",
     photos_directory: "./photos/gallery-one/1"
   });
 
-  document.querySelectorAll("button").forEach(button => {
+  document.querySelectorAll(".btn").forEach(button => {
     button.addEventListener("click", function() {
       const section = this.innerText;
       const target = document.getElementById(galleryOne.options.target);
@@ -83,10 +87,13 @@
     });
   });
 
+  // Standalone
   LBcreateGallery({
     target: "gallery-two",
     photos_directory: "./photos/gallery-two"
   });
+
+  // Modal
 </script>
 </body>
 </html>

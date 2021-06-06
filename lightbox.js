@@ -84,25 +84,43 @@ LB.prototype.appendPhotos = function(photos) {
   const target = document.getElementById(this.options.target);
   const fragment = document.createDocumentFragment();
 
-  for (const photo of photos) {
-    const lightboxPhoto = LButils.createTag("img", "lightbox-photo-enlargeLB")
-      .LBatt("src", photo.src)
-      .LBatt("alt", `large_${photo.alt}`)
+  const createEnlargedPhotoElement = from => {
+    const lightboxPhoto = LButils.createTag("img", "lightbox-photo-enlargedLB")
+      .LBatt("src", from.src)
+      .LBatt("alt", `large_${from.alt}`)
       .LBstyle(
         // Scale images so that they don't cover the entire screen if they are too big
         `max-width: ${screen.width * this.options.photos_scale}px; 
         max-height: ${screen.height * this.options.photos_scale}px;`
       );
 
+    return lightboxPhoto;
+  }
+
+  for (const photo of photos) {
     const img = LButils.createTag("img", "lightbox-photoLB")
       .LBatt("src", photo.src)
       .LBatt("alt", photo.alt)
-      .LBclick(_ => LButils.createLightboxComponent(lightboxPhoto));
+      .LBclick(_ => LButils.createLightboxComponent(
+        createEnlargedPhotoElement(photo)
+      ));
 
     fragment.appendChild(img);
   }
-
+  
   target.appendChild(fragment);
+
+  // Responsive images
+  window.addEventListener("resize", () => {
+    const photoInstance = document.querySelector('.lightbox-photo-enlargedLB');
+
+    if (photoInstance) {
+      photoInstance.style.cssText = `
+        max-width: ${screen.width * this.options.photos_scale}px;
+        max-height: ${screen.height * this.options.photos_scale}px;
+      `;
+    }
+  });
 }
 
 LB.prototype.fetchAndAppendPhotosFromDirectory = function() {

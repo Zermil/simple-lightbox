@@ -42,7 +42,7 @@
   transform: translate(-50%, -50%);
 }
 
-.lightbox-photo-enlargeLB {
+.lightbox-photo-enlargedLB {
   object-fit: cover;
   border: 4px solid #fff;
   border-radius: 3px;
