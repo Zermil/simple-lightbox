@@ -48,13 +48,13 @@ window.LButils = {
       .LBchildren(
         LButils.createTag("span", "lightbox-close-buttonLB")
           .LBhtml("&times;")
-          .LBclick(LButils.closeLightboxComponent)
+          .LBclick(this._closeLightboxComponent)
       );
 
     // Append everything
     document.body.appendChild(
       LButils.createTag("div", "lightboxLB")
-        .LBclick(LButils.closeLightboxComponent)
+        .LBclick(this._closeLightboxComponent)
     );
     
     document.body.appendChild(
@@ -63,7 +63,7 @@ window.LButils = {
     );
   },
 
-  closeLightboxComponent: function() {
+  _closeLightboxComponent: function() {
     document.body.removeChild(
       document.querySelector(".lightbox-containerLB")
     );
@@ -85,7 +85,7 @@ function LB(initializeOptions = {}) {
   this.options = Object.assign({}, LBdefaults, initializeOptions);
 }
 
-LB.prototype.appendPhotos = function(photos) {
+LB.prototype._appendPhotos = function(photos) {
   const target = document.getElementById(this.options.target);
   const fragment = document.createDocumentFragment();
 
@@ -128,7 +128,7 @@ LB.prototype.appendPhotos = function(photos) {
   });
 }
 
-LB.prototype.fetchAndAppendPhotosFromDirectory = function() {
+LB.prototype._fetchAndAppendPhotosFromDirectory = function() {
   const _this = this;
 
   // Why is web-development like this...
@@ -151,7 +151,7 @@ LB.prototype.fetchAndAppendPhotosFromDirectory = function() {
         * otherwise you can't "retrive" photos
         * yay web-dev/js
       */
-      _this.appendPhotos(allPhotos);
+      _this._appendPhotos(allPhotos);
 
     } else {
 
@@ -165,7 +165,7 @@ LB.prototype.fetchAndAppendPhotosFromDirectory = function() {
   xhr.send();
 }
 
-LB.prototype.errorCheck = function() {
+LB.prototype._errorCheck = function() {
   const errorMessages = [];
 
   if (!(document.getElementById(this.options.target))) {
@@ -185,7 +185,7 @@ LB.prototype.errorCheck = function() {
 
 LB.prototype.initializeGallery = function() {
   // Error check could be improved
-  const errorMessages = this.errorCheck();
+  const errorMessages = this._errorCheck();
 
   if (errorMessages.length) {
     for (const errorMsg of errorMessages) {
@@ -195,7 +195,7 @@ LB.prototype.initializeGallery = function() {
     return;
   }
   
-  this.fetchAndAppendPhotosFromDirectory();
+  this._fetchAndAppendPhotosFromDirectory();
 }
 
 // Wrapper function
