@@ -219,7 +219,7 @@ LB.prototype._initializeGallery = function() {
   this._onResize();
 }
 
-LB.prototype.changePhotoDirectory = function(newDirectory) {
+LB.prototype.changePhotosAndSwapDirectory = function(newDirectory) {
   this._options.photos_directory = newDirectory;
   const targetElement = document.getElementById(this._options.target);
 

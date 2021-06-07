@@ -83,7 +83,7 @@
 
   document.querySelectorAll(".btn").forEach(button => {
     button.addEventListener("click", function() {
-      galleryOne.changePhotoDirectory("./photos/gallery-one/" + this.innerText);
+      galleryOne.changePhotosAndSwapDirectory("./photos/gallery-one/" + this.innerText);
     });
   });
 
