@@ -87,28 +87,38 @@ function LB(initializeOptions = {}) {
   this._photoElements = [];
 }
 
-LB.prototype._onResize = function() {
-  // Responsive images
-  window.addEventListener("resize", () => {
-    const photoInstance = document.querySelector('.lightbox-photo-enlargedLB');
+LB.prototype._createEnlargedPhotoElement = function(from) {
+  const lightboxPhoto = LButils.createTag("img", "lightbox-photo-enlargedLB")
+    .LBatt("src", from.src)
+    .LBatt("alt", `large_${from.alt}`)
+    .LBstyle(
+      // Scale images so that they don't cover the entire screen if they are too big
+      `max-width: ${screen.width * this.options.photos_scale}px; 
+      max-height: ${screen.height * this.options.photos_scale}px;`
+    );
+    
+  const swapPanel = LButils.createTag("div", "lightbox-controlLB")
+    .LBchildren(
+      LButils.createTag("span", "lightbox-buttonLB lightbox-swapLB").LBhtml("&lt;").LBclick(_ => {
+        lightboxPhoto.src = this._photoElements[this._currentIndex <= 0 ? 0 : this._currentIndex - 1].src;
+      }),
 
-    if (photoInstance) {
-      photoInstance.style.cssText = `
+      LButils.createTag("span", "lightbox-buttonLB lightbox-swapLB").LBhtml("&gt;").LBclick(_ => {
+        lightboxPhoto.src = this._photoElements[this._currentIndex >= (this._photoElements.length - 1) ? this._photoElements.length - 1 : this._currentIndex + 1].src;
+      }),
+    );
+  
+  // Responsive images
+  window.addEventListener("resize", _ => {
+    if (lightboxPhoto) {
+      lightboxPhoto.style.cssText = `
         max-width: ${screen.width * this.options.photos_scale}px;
         max-height: ${screen.height * this.options.photos_scale}px;
       `;
     }
   });
-} 
-
-LB.prototype._nextPhoto = function() {
-  this._currentIndex = this._currentIndex >= (this._photoElements.length - 1) ? this._photoElements.length - 1 : this._currentIndex + 1;
-  document.querySelector(".lightbox-photo-enlargedLB").src = this._photoElements[this._currentIndex].src;
-}
-
-LB.prototype._prevPhoto = function() {
-  this._currentIndex = this._currentIndex <= 0 ? 0 : this._currentIndex - 1;
-  document.querySelector(".lightbox-photo-enlargedLB").src = this._photoElements[this._currentIndex].src;
+    
+  return LButils.createTag("div").LBchildren(lightboxPhoto, swapPanel);
 }
 
 LB.prototype._appendPhotos = function(photos) {
@@ -117,42 +127,19 @@ LB.prototype._appendPhotos = function(photos) {
   const target = document.getElementById(this.options.target);
   const fragment = document.createDocumentFragment();
 
-  const createEnlargedPhotoElement = from => {
-    const lightboxPhoto = LButils.createTag("img", "lightbox-photo-enlargedLB")
-      .LBatt("src", from.src)
-      .LBatt("alt", `large_${from.alt}`)
-      .LBstyle(
-        // Scale images so that they don't cover the entire screen if they are too big
-        `max-width: ${screen.width * this.options.photos_scale}px; 
-        max-height: ${screen.height * this.options.photos_scale}px;`
-      );
-    
-    const swapPanel = LButils.createTag("div", "lightbox-controlLB")
-      .LBchildren(
-        LButils.createTag("span", "lightbox-buttonLB lightbox-swapLB").LBhtml("&lt;").LBclick(_ => this._prevPhoto()),
-        LButils.createTag("span", "lightbox-buttonLB lightbox-swapLB").LBhtml("&gt;").LBclick(_ => this._nextPhoto()),
-      )
-
-    return LButils.createTag("div").LBchildren(lightboxPhoto, swapPanel);
-  }
-
   for (const photo of photos) {
     const img = LButils.createTag("img", "lightbox-photoLB")
       .LBatt("src", photo.src)
       .LBatt("alt", photo.alt)
       .LBclick(_ => {
         this._currentIndex = photos.findIndex(element => element.src === photo.src);
-
-        LButils.createLightboxComponent(
-          createEnlargedPhotoElement(photo)
-        )
+        LButils.createLightboxComponent(this._createEnlargedPhotoElement(photo))
       });
 
     fragment.appendChild(img);
   }
 
   target.appendChild(fragment);
-  this._onResize();
 }
 
 LB.prototype._fetchAndAppendPhotosFromDirectory = function() {

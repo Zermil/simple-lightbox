@@ -17,6 +17,14 @@
     width: 120px;
     height: 120px;
   }
+
+  .lightbox-controlLB > .lightbox-buttonLB {
+    font-size: 50px;
+  }
+}
+
+.lightbox-swapLB:first-child {
+  margin-right: 20px;
 }
 
 .lightboxLB {
