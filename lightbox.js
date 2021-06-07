@@ -133,7 +133,7 @@ LB.prototype._appendPhotos = function(photos) {
       .LBatt("alt", photo.alt)
       .LBclick(_ => {
         this._currentIndex = photos.findIndex(element => element.src === photo.src);
-        LButils.createLightboxComponent(this._createEnlargedPhotoElement(photo))
+        LButils.createLightboxComponent(this._createEnlargedPhotoElement(photo));
       });
 
     fragment.appendChild(img);
