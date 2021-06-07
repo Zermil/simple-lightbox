@@ -87,8 +87,6 @@ window.LButils = {
 window.LBevents = {
   _resizeEvent: null,
   _handleResize: function() {
-    console.log("Firing");
-
     document.querySelector(".lightbox-photo-enlargedLB").style.cssText = `
       max-width: ${screen.width * this._options.photos_scale}px;
       max-height: ${screen.height * this._options.photos_scale}px;
