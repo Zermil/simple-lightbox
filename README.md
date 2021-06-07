@@ -1,6 +1,6 @@
 # Simple-Lightbox
 
-Small JavaScript "framework", mostly for personal use, used to create small galleries for simple websites. 80% of pre-existing ones, claiming to be "lightweight" and "simple" actually have over 800+ lines of code ![PogO](./photos/PogO.png)
+Small JavaScript "framework", mostly for personal use, used to create small galleries for simple websites. 80% of pre-existing ones, claiming to be "lightweight" and "simple" actually have over 800+ lines of code ![PogO](./photos/PogO.png) and I just wanted something that will generate DOM with classes.
 
 **DISCLAIMER**: If you are looking for something "concrete" and "well made" this is not it. This is more so a personal project/framework/thing. Please consider using one of the following if you are looking for something well made:
 
