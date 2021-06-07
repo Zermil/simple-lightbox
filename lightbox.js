@@ -100,24 +100,26 @@ LB.prototype._createEnlargedPhotoElement = function(from) {
   const swapPanel = LButils.createTag("div", "lightbox-controlLB")
     .LBchildren(
       LButils.createTag("span", "lightbox-buttonLB lightbox-swapLB").LBhtml("&lt;").LBclick(_ => {
-        lightboxPhoto.src = this._photoElements[this._currentIndex <= 0 ? 0 : this._currentIndex - 1].src;
+        this._currentIndex = this._currentIndex <= 0 ? 0 : this._currentIndex - 1;
+        lightboxPhoto.src = this._photoElements[this._currentIndex].src;
       }),
 
       LButils.createTag("span", "lightbox-buttonLB lightbox-swapLB").LBhtml("&gt;").LBclick(_ => {
-        lightboxPhoto.src = this._photoElements[this._currentIndex >= (this._photoElements.length - 1) ? this._photoElements.length - 1 : this._currentIndex + 1].src;
+        this._currentIndex = this._currentIndex >= this._photoElements.length - 1 ? this._photoElements.length - 1 : this._currentIndex + 1;
+        lightboxPhoto.src = this._photoElements[this._currentIndex].src;
       }),
     );
-  
+
   // Responsive images
   window.addEventListener("resize", _ => {
-    if (lightboxPhoto) {
-      lightboxPhoto.style.cssText = `
+    if (document.querySelector(".lightbox-photo-enlargedLB")) {
+      document.querySelector(".lightbox-photo-enlargedLB").style.cssText = `
         max-width: ${screen.width * this.options.photos_scale}px;
         max-height: ${screen.height * this.options.photos_scale}px;
       `;
     }
   });
-    
+
   return LButils.createTag("div").LBchildren(lightboxPhoto, swapPanel);
 }
 
