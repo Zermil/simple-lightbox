@@ -1,3 +1,5 @@
+"use strict";
+
 // Utilities
 window.LButils = {
   createTag: function(tag, className) {
@@ -7,8 +9,11 @@ window.LButils = {
       element.className = className;
     }
 
-    element.LBatt = function(name, value) {
-      this.setAttribute(name, value);
+    element.LBatt = function(attributes) {
+      for (const attributeName in attributes) {
+        this.setAttribute(attributeName, attributes[attributeName]);
+      }
+
       return this;
     }
 
@@ -43,18 +48,22 @@ window.LButils = {
     return element;
   },
 
-  createLightboxComponent: function(element) {
+  createLightboxComponent: function(element, onclose = null) {
     const controlPanel = LButils.createTag("div", "lightbox-controlLB")
       .LBchildren(
         LButils.createTag("span", "lightbox-buttonLB")
           .LBhtml("&times;")
-          .LBclick(() => this._closeLightboxComponent())
+          .LBclick(() => {
+            this._closeLightboxComponent(); if (onclose) onclose();
+          })
       );
 
     // Append everything
     document.body.appendChild(
       LButils.createTag("div", "lightboxLB")
-        .LBclick(() => this._closeLightboxComponent())
+        .LBclick(() => {
+          this._closeLightboxComponent(); if (onclose) onclose();
+        })
     );
     
     document.body.appendChild(
@@ -70,10 +79,6 @@ window.LButils = {
   },
 
   _closeLightboxComponent: function() {
-    window.dispatchEvent(
-      new Event("closedLightbox")
-    );
-
     document.body.removeChild(
       document.querySelector(".lightbox-containerLB")
     );
@@ -109,8 +114,7 @@ function LB(initializeOptions = {}) {
 
 LB.prototype._createEnlargedPhotoElement = function(from) {
   const lightboxPhoto = LButils.createTag("img", "lightbox-photo-enlargedLB")
-    .LBatt("src", from.src)
-    .LBatt("alt", `large_${from.alt}`)
+    .LBatt({ src: from.src, alt: `large_${from.alt}`})
     .LBstyle(
       // Scale images so that they don't cover the entire screen if they are too big
       `max-width: ${screen.width * this._options.photos_scale}px; 
@@ -135,20 +139,22 @@ LB.prototype._createEnlargedPhotoElement = function(from) {
 
 LB.prototype._appendPhotos = function(photos) {
   this._photoElements = photos; // IMPORTANT!
-
   const target = document.getElementById(this._options.target);
   const fragment = document.createDocumentFragment();
 
   for (const photo of this._photoElements) {
     const img = LButils.createTag("img", "lightbox-photoLB")
-      .LBatt("src", photo.src)
-      .LBatt("alt", photo.alt)
+      .LBatt({ src: photo.src, alt: photo.alt})
       .LBclick(() => {
         this._currentIndex = photos.findIndex(element => element.src === photo.src);
-        LButils.createLightboxComponent(this._createEnlargedPhotoElement(photo));
+        LBevents._resizeEvent = (LBevents._handleResize).bind(this);
+
+        LButils.createLightboxComponent(
+          this._createEnlargedPhotoElement(photo),
+          () => { window.removeEventListener("resize", LBevents._resizeEvent); LBevents._resizeEvent = null; }
+        );
         
         // Responsive images
-        LBevents._resizeEvent = (LBevents._handleResize).bind(this);
         window.addEventListener("resize", LBevents._resizeEvent);
       });
 
@@ -235,11 +241,6 @@ LB.prototype.changePhotosAndSwapDirectory = function(newDirectory) {
 
   this._fetchAndAppendPhotosFromDirectory();
 }
-
-// Handle closing lightbox, remove window's "resize" event listener
-window.addEventListener("closedLightbox", () => { 
-  window.removeEventListener("resize", LBevents._resizeEvent)
-});
 
 // Wrapper function
 // Feels weird and wrong, but it works ugh...
