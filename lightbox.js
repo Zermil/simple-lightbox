@@ -101,13 +101,13 @@ LB.prototype._onResize = function() {
   });
 } 
 
-LB.prototype._prevPhoto = function() {
-  this._currentIndex = this._currentIndex <= 0 ? 0 : this._currentIndex - 1;
+LB.prototype._nextPhoto = function() {
+  this._currentIndex = this._currentIndex >= (this._photoElements.length - 1) ? this._photoElements.length - 1 : this._currentIndex + 1;
   document.querySelector(".lightbox-photo-enlargedLB").src = this._photoElements[this._currentIndex].src;
 }
 
-LB.prototype._nextPhoto = function() {
-  this._currentIndex = this._currentIndex >= (this._photoElements.length - 1) ? this._photoElements.length - 1 : this._currentIndex + 1;
+LB.prototype._prevPhoto = function() {
+  this._currentIndex = this._currentIndex <= 0 ? 0 : this._currentIndex - 1;
   document.querySelector(".lightbox-photo-enlargedLB").src = this._photoElements[this._currentIndex].src;
 }
 
