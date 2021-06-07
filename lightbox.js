@@ -110,16 +110,6 @@ LB.prototype._createEnlargedPhotoElement = function(from) {
       }),
     );
 
-  // Responsive images
-  window.addEventListener("resize", _ => {
-    if (document.querySelector(".lightbox-photo-enlargedLB")) {
-      document.querySelector(".lightbox-photo-enlargedLB").style.cssText = `
-        max-width: ${screen.width * this.options.photos_scale}px;
-        max-height: ${screen.height * this.options.photos_scale}px;
-      `;
-    }
-  });
-
   return LButils.createTag("div").LBchildren(lightboxPhoto, swapPanel);
 }
 
@@ -142,6 +132,16 @@ LB.prototype._appendPhotos = function(photos) {
   }
 
   target.appendChild(fragment);
+
+  // Responsive images
+  window.addEventListener("resize", _ => {
+    if (document.querySelector(".lightbox-photo-enlargedLB")) {
+      document.querySelector(".lightbox-photo-enlargedLB").style.cssText = `
+        max-width: ${screen.width * this.options.photos_scale}px;
+        max-height: ${screen.height * this.options.photos_scale}px;
+      `;
+    }
+  });
 }
 
 LB.prototype._fetchAndAppendPhotosFromDirectory = function() {
