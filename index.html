@@ -83,15 +83,7 @@
 
   document.querySelectorAll(".btn").forEach(button => {
     button.addEventListener("click", function() {
-      const target = document.getElementById(galleryOne.options.target);
-      galleryOne.options.photos_directory = "./photos/gallery-one/" + this.innerText;
-      
-      // Clear
-      while (target.firstChild) {
-        target.removeChild(target.firstChild);
-      }
-
-      galleryOne.initializeGallery();
+      galleryOne.changePhotoDirectory("./photos/gallery-one/" + this.innerText);
     });
   });
 

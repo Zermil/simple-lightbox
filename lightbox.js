@@ -82,7 +82,7 @@ const LBdefaults = {
 };
 
 function LB(initializeOptions = {}) {
-  this.options = Object.assign({}, LBdefaults, initializeOptions);
+  this._options = Object.assign({}, LBdefaults, initializeOptions);
   this._currentIndex = 0;
   this._photoElements = [];
 }
@@ -91,8 +91,8 @@ LB.prototype._onResize = function() {
   window.addEventListener("resize", _ => {
     if (document.querySelector(".lightbox-photo-enlargedLB")) {
       document.querySelector(".lightbox-photo-enlargedLB").style.cssText = `
-        max-width: ${screen.width * this.options.photos_scale}px;
-        max-height: ${screen.height * this.options.photos_scale}px;
+        max-width: ${screen.width * this._options.photos_scale}px;
+        max-height: ${screen.height * this._options.photos_scale}px;
       `;
     }
   });
@@ -104,8 +104,8 @@ LB.prototype._createEnlargedPhotoElement = function(from) {
     .LBatt("alt", `large_${from.alt}`)
     .LBstyle(
       // Scale images so that they don't cover the entire screen if they are too big
-      `max-width: ${screen.width * this.options.photos_scale}px; 
-      max-height: ${screen.height * this.options.photos_scale}px;`
+      `max-width: ${screen.width * this._options.photos_scale}px; 
+      max-height: ${screen.height * this._options.photos_scale}px;`
     );
     
   const swapPanel = LButils.createTag("div", "lightbox-controlLB")
@@ -126,8 +126,8 @@ LB.prototype._createEnlargedPhotoElement = function(from) {
 
 LB.prototype._appendPhotos = function(photos) {
   this._photoElements = photos; // IMPORTANT!
-  
-  const target = document.getElementById(this.options.target);
+
+  const target = document.getElementById(this._options.target);
   const fragment = document.createDocumentFragment();
 
   for (const photo of photos) {
@@ -150,7 +150,7 @@ LB.prototype._fetchAndAppendPhotosFromDirectory = function() {
 
   // Why is web-development like this...
   const xhr = new XMLHttpRequest();
-  xhr.open("GET", this.options.photos_directory);
+  xhr.open("GET", this._options.photos_directory);
   xhr.responseType = "document";
 
   xhr.onload = function() {
@@ -174,7 +174,7 @@ LB.prototype._fetchAndAppendPhotosFromDirectory = function() {
     } else {
 
       console.error(
-        `Gallery: '${_this.options.target}' -> Failed to fetch photos from specified 'path' (photos_directory): '${_this.options.photos_directory}'`
+        `Gallery: '${_this._options.target}' -> Failed to fetch photos from specified 'path' (photos_directory): '${_this._options.photos_directory}'`
       );
 
     }
@@ -186,22 +186,22 @@ LB.prototype._fetchAndAppendPhotosFromDirectory = function() {
 LB.prototype._errorCheck = function() {
   const errorMessages = [];
 
-  if (!(document.getElementById(this.options.target))) {
+  if (!(document.getElementById(this._options.target))) {
     errorMessages.push(
-      `Gallery: '${this.options.target}' -> DOM element with specified 'target' id does not exist`
+      `Gallery: '${this._options.target}' -> DOM element with specified 'target' id does not exist`
     );
   }
 
-  if (this.options.photos_scale <= 0) {
+  if (this._options.photos_scale <= 0) {
     errorMessages.push(
-      `Gallery: '${this.options.target}' -> 'photos_scale' needs to be greater than 0, provided: ${this.options.photos_scale}`
+      `Gallery: '${this._options.target}' -> 'photos_scale' needs to be greater than 0, provided: ${this._options.photos_scale}`
     );
   }
 
   return errorMessages;
 }
 
-LB.prototype.initializeGallery = function() {
+LB.prototype._initializeGallery = function() {
   // Error check could be improved
   const errorMessages = this._errorCheck();
 
@@ -216,15 +216,26 @@ LB.prototype.initializeGallery = function() {
   this._fetchAndAppendPhotosFromDirectory();
 
   // Responsive images
-  // I have no idea where to put it for it to make sense
   this._onResize();
+}
+
+LB.prototype.changePhotoDirectory = function(newDirectory) {
+  this._options.photos_directory = newDirectory;
+  const targetElement = document.getElementById(this._options.target);
+
+  // Clear
+  while (targetElement.firstChild) {
+    targetElement.removeChild(targetElement.firstChild);
+  }
+
+  this._fetchAndAppendPhotosFromDirectory();
 }
 
 // Wrapper function
 // Feels weird and wrong, but it works ugh...
 function LBcreateGallery(initializeOptions) {
   const instance = new LB(initializeOptions);
-  instance.initializeGallery();
+  instance._initializeGallery();
 
   return instance;
 }
