@@ -1,3 +1,9 @@
+/*
+  * I guess this goes without saying, but
+  * DO NOT change any names here, you can stylize these 
+  * classes all you want, but keep the names exactly how they are
+  * otherwise funky stuff happens
+*/
 .lightbox-photoLB {
   width: 250px;
   height: 250px;
@@ -29,7 +35,7 @@
   color: #fff;
 }
 
-.lightbox-controlLB > .lightbox-close-buttonLB {
+.lightbox-controlLB > .lightbox-buttonLB {
   cursor: pointer;
   font-size: 55px;
 }
