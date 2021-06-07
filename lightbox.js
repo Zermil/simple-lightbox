@@ -87,6 +87,17 @@ function LB(initializeOptions = {}) {
   this._photoElements = [];
 }
 
+LB.prototype._onResize = function() {
+  window.addEventListener("resize", _ => {
+    if (document.querySelector(".lightbox-photo-enlargedLB")) {
+      document.querySelector(".lightbox-photo-enlargedLB").style.cssText = `
+        max-width: ${screen.width * this.options.photos_scale}px;
+        max-height: ${screen.height * this.options.photos_scale}px;
+      `;
+    }
+  });
+}
+
 LB.prototype._createEnlargedPhotoElement = function(from) {
   const lightboxPhoto = LButils.createTag("img", "lightbox-photo-enlargedLB")
     .LBatt("src", from.src)
@@ -115,7 +126,7 @@ LB.prototype._createEnlargedPhotoElement = function(from) {
 
 LB.prototype._appendPhotos = function(photos) {
   this._photoElements = photos; // IMPORTANT!
-
+  
   const target = document.getElementById(this.options.target);
   const fragment = document.createDocumentFragment();
 
@@ -132,16 +143,6 @@ LB.prototype._appendPhotos = function(photos) {
   }
 
   target.appendChild(fragment);
-
-  // Responsive images
-  window.addEventListener("resize", _ => {
-    if (document.querySelector(".lightbox-photo-enlargedLB")) {
-      document.querySelector(".lightbox-photo-enlargedLB").style.cssText = `
-        max-width: ${screen.width * this.options.photos_scale}px;
-        max-height: ${screen.height * this.options.photos_scale}px;
-      `;
-    }
-  });
 }
 
 LB.prototype._fetchAndAppendPhotosFromDirectory = function() {
@@ -213,6 +214,10 @@ LB.prototype.initializeGallery = function() {
   }
   
   this._fetchAndAppendPhotosFromDirectory();
+
+  // Responsive images
+  // I have no idea where to put it for it to make sense
+  this._onResize();
 }
 
 // Wrapper function
