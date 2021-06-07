@@ -90,7 +90,8 @@
   // Standalone
   LBcreateGallery({
     target: "gallery-two",
-    photos_directory: "./photos/gallery-two"
+    photos_directory: "./photos/gallery-two",
+    photos_scale: 0.4
   });
 
   // Modal
@@ -99,6 +100,11 @@
       .LBtext("This is a simple modal window!");
 
     LButils.createLightboxComponent(modalElement);
+  });
+
+  // Close lightbox event
+  window.addEventListener("closedLightbox", function() {
+    console.log("Closed lightbox component!");
   });
 </script>
 </body>
