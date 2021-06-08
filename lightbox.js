@@ -102,8 +102,8 @@ function LB(initializeOptions = {}) {
 
 LB.prototype._onResize = function() {
   document.querySelector(".lightbox-photo-enlargedLB").style.cssText = `
-    max-width: ${screen.width * this._options.photos_scale}px;
-    max-height: ${screen.height * this._options.photos_scale}px;
+    max-width: ${window.innerWidth * this._options.photos_scale}px;
+    max-height: ${window.innerHeight * this._options.photos_scale}px;
   `;
 }
 
@@ -112,8 +112,8 @@ LB.prototype._createEnlargedPhotoElement = function(from) {
     .LBatt({ "src": from.src, "alt": `large_${from.alt}` })
     .LBstyle(
       // Scale images so that they don't cover the entire screen if they are too big
-      `max-width: ${screen.width * this._options.photos_scale}px; 
-      max-height: ${screen.height * this._options.photos_scale}px;`
+      `max-width: ${window.innerWidth * this._options.photos_scale}px; 
+      max-height: ${window.innerHeight * this._options.photos_scale}px;`
     );
     
   const swapPanel = LButils.createTag("div", "lightbox-controlLB")
