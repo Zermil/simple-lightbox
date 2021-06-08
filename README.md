@@ -14,7 +14,7 @@ Photos in demo: Courtesy of [Unsplash](https://unsplash.com/)
 
 I don't know why would someone want to use it, but a simple demo can be found in "[index.html](https://github.com/Zermil/simple-lightbox/blob/master/index.html)" it also has "customizable" CSS so suit yourself. 
 
-**NOTE** that it needs some sort of "server" to run (website needs to be hosted somewhere, it can be hosted locally when you are testing), because of XML request.
+**NOTE** that it needs some sort of "server" to run (website needs to be hosted somewhere, it can be hosted locally when you are testing, using python SimpleHTTPServer for example), because of XML request.
 
 Get started template:
 
@@ -37,6 +37,12 @@ Get started template:
 </script>
 </body>
 </html>
+```
+
+Local hosting with the use of SimpleHTTPServer:
+
+```console
+> python -m http.server 1337
 ```
 
 ## Mini DOCs:

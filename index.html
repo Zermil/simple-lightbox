@@ -71,6 +71,7 @@
 
     <h2>Modal</h2>
     <button id="modal">Open Modal</button>
+    <button id="modal-callback">Open Modal (with 'onclose' callback)</button>
   </div>
 
 <script src="./lightbox.js"></script>
@@ -100,6 +101,14 @@
       .LBtext("This is a simple modal window!");
 
     LButils.createLightboxComponent(modalElement);
+  });
+  
+  // Modal with 'onclose' callback
+  document.getElementById("modal-callback").addEventListener("click", function() {
+    const modalElement = LButils.createTag("div", "modal")
+      .LBtext("This is a modal window with 'onclose' callback!");
+
+    LButils.createLightboxComponent(modalElement, () => alert("Closed!"));
   });
 </script>
 </body>

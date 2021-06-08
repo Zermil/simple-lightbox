@@ -1,5 +1,3 @@
-"use strict";
-
 // Utilities
 window.LButils = {
   createTag: function(tag, className) {
@@ -53,17 +51,13 @@ window.LButils = {
       .LBchildren(
         LButils.createTag("span", "lightbox-buttonLB")
           .LBhtml("&times;")
-          .LBclick(() => {
-            this._closeLightboxComponent(); if (onclose) onclose();
-          })
+          .LBclick(() => { this._closeLightboxComponent(); if (onclose) onclose(); })
       );
 
     // Append everything
     document.body.appendChild(
       LButils.createTag("div", "lightboxLB")
-        .LBclick(() => {
-          this._closeLightboxComponent(); if (onclose) onclose();
-        })
+        .LBclick(() => { this._closeLightboxComponent(); if (onclose) onclose(); })
     );
     
     document.body.appendChild(
@@ -88,16 +82,6 @@ window.LButils = {
     );
   }
 };
-
-window.LBevents = {
-  _resizeEvent: null,
-  _handleResize: function() {
-    document.querySelector(".lightbox-photo-enlargedLB").style.cssText = `
-      max-width: ${screen.width * this._options.photos_scale}px;
-      max-height: ${screen.height * this._options.photos_scale}px;
-    `;
-  }
-};
 //=========================
 
 const LBdefaults = {
@@ -110,6 +94,16 @@ function LB(initializeOptions = {}) {
   this._options = Object.assign({}, LBdefaults, initializeOptions);
   this._currentIndex = 0;
   this._photoElements = [];
+  this._onResizeEvent = null;
+}
+
+LB.prototype._onResize = function() {
+  console.log("Firing");
+
+  document.querySelector(".lightbox-photo-enlargedLB").style.cssText = `
+    max-width: ${screen.width * this._options.photos_scale}px;
+    max-height: ${screen.height * this._options.photos_scale}px;
+  `;
 }
 
 LB.prototype._createEnlargedPhotoElement = function(from) {
@@ -147,15 +141,15 @@ LB.prototype._appendPhotos = function(photos) {
       .LBatt({ src: photo.src, alt: photo.alt})
       .LBclick(() => {
         this._currentIndex = photos.findIndex(element => element.src === photo.src);
-        LBevents._resizeEvent = (LBevents._handleResize).bind(this);
+        this._onResizeEvent = (this._onResize).bind(this);
 
         LButils.createLightboxComponent(
           this._createEnlargedPhotoElement(photo),
-          () => { window.removeEventListener("resize", LBevents._resizeEvent); LBevents._resizeEvent = null; }
+          () => { window.removeEventListener("resize", this._onResizeEvent); this._onResizeEvent = null; }
         );
         
         // Responsive images
-        window.addEventListener("resize", LBevents._resizeEvent);
+        window.addEventListener("resize", this._onResizeEvent);
       });
 
     fragment.appendChild(img);
