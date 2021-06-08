@@ -86,20 +86,19 @@ window.LButils = {
 
 const LBdefaults = {
   target: "gallery",
-  photos_directory: "./photos",
-  photos_scale: 0.75
+  photos_directory: null,
+  photos_scale: 0.75,
+  images_array: [],
 };
 
 function LB(initializeOptions = {}) {
   this._options = Object.assign({}, LBdefaults, initializeOptions);
-  this._currentIndex = 0;
   this._photoElements = [];
+  this._currentIndex = 0;
   this._onResizeEvent = null;
 }
 
 LB.prototype._onResize = function() {
-  console.log("Firing");
-
   document.querySelector(".lightbox-photo-enlargedLB").style.cssText = `
     max-width: ${screen.width * this._options.photos_scale}px;
     max-height: ${screen.height * this._options.photos_scale}px;
@@ -108,7 +107,7 @@ LB.prototype._onResize = function() {
 
 LB.prototype._createEnlargedPhotoElement = function(from) {
   const lightboxPhoto = LButils.createTag("img", "lightbox-photo-enlargedLB")
-    .LBatt({ src: from.src, alt: `large_${from.alt}`})
+    .LBatt({ "src": from.src, "alt": `large_${from.alt}` })
     .LBstyle(
       // Scale images so that they don't cover the entire screen if they are too big
       `max-width: ${screen.width * this._options.photos_scale}px; 
@@ -133,14 +132,15 @@ LB.prototype._createEnlargedPhotoElement = function(from) {
 
 LB.prototype._appendPhotos = function(photos) {
   this._photoElements = photos; // IMPORTANT!
+
   const target = document.getElementById(this._options.target);
   const fragment = document.createDocumentFragment();
 
   for (const photo of this._photoElements) {
     const img = LButils.createTag("img", "lightbox-photoLB")
-      .LBatt({ src: photo.src, alt: photo.alt})
+      .LBatt({ "src": photo.src, "alt": photo.alt })
       .LBclick(() => {
-        this._currentIndex = photos.findIndex(element => element.src === photo.src);
+        this._currentIndex = this._photoElements.findIndex(element => element.src === photo.src);
         this._onResizeEvent = (this._onResize).bind(this);
 
         LButils.createLightboxComponent(
@@ -172,22 +172,22 @@ LB.prototype._fetchAndAppendPhotosFromDirectory = function() {
       const allPhotos = [...this.response.getElementsByTagName('a')]
         .filter(photo => photo.href.match(/\.(jpe?g|png)$/i))
         .map(photo => photo = {
-          src: photo.href,
-          alt: photo.title.split('.')[0]
+          "src": photo.href,
+          "alt": photo.textContent.split('.')[0]
         });
-      
+
       /*
         * You need a callback function like this
         * otherwise you can't "retrive"/assign photos
-        * like so -> this._photoElements = allPhotos;
+        * like so -> _this._photoElements = allPhotos;
         * yay web-dev/js
       */
-      _this._appendPhotos(allPhotos);
+      _this._appendPhotos([...allPhotos, ..._this._options.images_array]);
 
     } else {
 
       console.error(
-        `Gallery: '${_this._options.target}' -> Failed to fetch photos from specified 'path' (photos_directory): '${_this._options.photos_directory}'`
+        `Gallery id: '${_this._options.target}' -> Failed to fetch photos from specified 'path' (photos_directory): '${_this._options.photos_directory}'`
       );
 
     }
@@ -201,13 +201,19 @@ LB.prototype._errorCheck = function() {
 
   if (!(document.getElementById(this._options.target))) {
     errorMessages.push(
-      `Gallery: '${this._options.target}' -> DOM element with specified 'target' id does not exist`
+      `Gallery id: '${this._options.target}' -> DOM element with specified id ('target') does not exist`
     );
   }
 
   if (this._options.photos_scale <= 0) {
     errorMessages.push(
-      `Gallery: '${this._options.target}' -> 'photos_scale' needs to be greater than 0, provided: ${this._options.photos_scale}`
+      `Gallery id: '${this._options.target}' -> Option: 'photos_scale' must be greater than 0, provided: ${this._options.photos_scale}`
+    );
+  }
+
+  if (!(this._options.photos_directory) && this._options.images_array.length === 0) {
+    errorMessages.push(
+      `Gallery id: '${this._options.target}' -> Both 'photos_directory' and 'images_array' are empty/not specified, could not add photos`
     );
   }
 
@@ -226,7 +232,10 @@ LB.prototype._initializeGallery = function() {
     return;
   }
 
-  this._fetchAndAppendPhotosFromDirectory();
+  if (!(this._options.photos_directory)) // Gallery not specified, no need to try and fetch photos
+    this._appendPhotos(this._options.images_array);
+  else // Gallery specified
+    this._fetchAndAppendPhotosFromDirectory();
 }
 
 LB.prototype.changePhotosAndSwapDirectory = function(newDirectory) {

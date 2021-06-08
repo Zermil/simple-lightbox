@@ -76,6 +76,18 @@
 
 <script src="./lightbox.js"></script>
 <script>
+  // images_array
+  const imgArr = [
+    {
+      "src": "./photos/gallery-two/additional-photos/craiddo.jpg",
+      "alt": "craiddo"
+    },
+    {
+      "src": "./photos/gallery-two/additional-photos/mountain-side.jpg",
+      "alt": "mountain-side"
+    }
+  ];
+
   // Sections
   const galleryOne = LBcreateGallery({
     target: "gallery-one",
@@ -91,8 +103,9 @@
   // Standalone
   LBcreateGallery({
     target: "gallery-two",
+    photos_scale: 0.4,
     photos_directory: "./photos/gallery-two",
-    photos_scale: 0.4
+    // images_array: imgArr
   });
 
   // Modal

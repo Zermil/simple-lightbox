@@ -51,8 +51,10 @@ Local hosting with the use of SimpleHTTPServer:
 - `target`: [DOM element ID, preferably div's] Specifies where to display photos.
 - `photos_directory`: Path to a folder containing all photos.
 - `photos_scale`: [1 > preferably > 0] Value by which to scale all 'enlarged' photos. (photos within lightbox after you click on them)
+- `images_array`: Array of photos as objects => { "src": SOURCE, "alt": ALT }
 
 **`DEFAULTS`**:
 - `target`: "gallery"
-- `photos_directory`: "./photos"
+- `photos_directory`: null
 - `photos_scale`: 0.75
+- `images_array`: []
