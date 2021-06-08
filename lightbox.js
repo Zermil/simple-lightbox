@@ -51,13 +51,13 @@ window.LButils = {
       .LBchildren(
         LButils.createTag("span", "lightbox-buttonLB")
           .LBhtml("&times;")
-          .LBclick(() => { this._closeLightboxComponent(); if (onclose) onclose(); })
+          .LBclick(() => this._closeLightboxComponent(onclose))
       );
 
     // Append everything
     document.body.appendChild(
       LButils.createTag("div", "lightboxLB")
-        .LBclick(() => { this._closeLightboxComponent(); if (onclose) onclose(); })
+        .LBclick(() => this._closeLightboxComponent(onclose))
     );
     
     document.body.appendChild(
@@ -72,7 +72,7 @@ window.LButils = {
     }
   },
 
-  _closeLightboxComponent: function() {
+  _closeLightboxComponent: function(onclose = null) {
     document.body.removeChild(
       document.querySelector(".lightbox-containerLB")
     );
@@ -80,6 +80,8 @@ window.LButils = {
     document.body.removeChild(
       document.querySelector(".lightboxLB")
     );
+
+    if (onclose) onclose();
   }
 };
 //=========================
