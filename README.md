@@ -12,7 +12,7 @@ Photos in demo: Courtesy of [Unsplash](https://unsplash.com/)
 
 ## Quick start/Instructions
 
-I don't know why would someone want to use it, but a simple demo can be found in "[index.html](https://github.com/Zermil/simple-lightbox/blob/master/index.html)" it also has "customizable" CSS so suit yourself. 
+I don't know why would someone want to use it, but a simple demo can be found in "[index.html](https://github.com/Zermil/simple-lightbox/blob/master/index.html)" it also has "customizable" [CSS](https://github.com/Zermil/simple-lightbox/blob/master/lightbox.css) so suit yourself. 
 
 **NOTE** that it needs some sort of "server" to run (website needs to be hosted somewhere, it can be hosted locally when you are testing, using python SimpleHTTPServer for example), because of XML request.
 
