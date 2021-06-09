@@ -99,13 +99,6 @@ function LB(initializeOptions = {}) {
   this._currentIndex = 0;
 }
 
-LB.prototype._onLighboxPhotoResize = function(lightboxPhoto) {
-  lightboxPhoto.style.cssText = `
-    max-width: ${window.innerWidth * this._options.photos_scale}px; 
-    max-height: ${window.innerHeight * this._options.photos_scale}px;
-  `;
-}
-
 LB.prototype._errorCheck = function() {
   const errorMessages = [];
 
@@ -128,6 +121,13 @@ LB.prototype._errorCheck = function() {
   }
 
   return errorMessages;
+}
+
+LB.prototype._onLighboxPhotoResize = function(lightboxPhoto) {
+  lightboxPhoto.style.cssText = `
+    max-width: ${window.innerWidth * this._options.photos_scale}px; 
+    max-height: ${window.innerHeight * this._options.photos_scale}px;
+  `;
 }
 
 LB.prototype._createEnlargedPhotoElement = function(from) {
