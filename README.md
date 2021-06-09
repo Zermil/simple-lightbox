@@ -12,9 +12,9 @@ Photos in demo: Courtesy of [Unsplash](https://unsplash.com/)
 
 ## Quick start/Instructions
 
-I don't know why would someone want to use it, but a simple demo can be found in "[index.html](https://github.com/Zermil/simple-lightbox/blob/master/index.html)" it also has "customizable" [CSS](https://github.com/Zermil/simple-lightbox/blob/master/lightbox.css) so suit yourself. 
+I don't know why would someone want to use it, but a quick demo can be found in "[index.html](https://github.com/Zermil/simple-lightbox/blob/master/index.html)" it also has "customizable" [CSS](https://github.com/Zermil/simple-lightbox/blob/master/lightbox.css) so suit yourself. 
 
-**NOTE** that it needs some sort of "server" to run (website needs to be hosted somewhere, it can be hosted locally when you are testing, using python SimpleHTTPServer for example), because of XML request.
+**NOTE** that the demo project needs some sort of "server" to run (file needs to be hosted somewhere, it can be hosted locally when you are testing, using python's SimpleHTTPServer for example), because of fetch request.
 
 Get started template:
 
@@ -32,7 +32,12 @@ Get started template:
 <script src="./lightbox.js"></script>
 <script>
   LBcreateGallery({
-    photos_directory: "./photos"
+    images_array: [
+      {
+        "src": SOURCE,
+        "alt": ALT
+      }
+    ]
   });
 </script>
 </body>
@@ -49,12 +54,10 @@ Local hosting with the use of SimpleHTTPServer:
 
 **`LBcreateGallery(initializeOptions)`**: Main function generating gallery, possible `'initializeOptions'` are:
 - `target`: [DOM element ID, preferably div's] Specifies where to display photos.
-- `photos_directory`: Path to a folder containing all photos.
 - `photos_scale`: [1 > preferably > 0] Value by which to scale all 'enlarged' photos. (photos within lightbox after you click on them)
 - `images_array`: Array of photos as objects => { "src": SOURCE, "alt": ALT }
 
 **`DEFAULTS`**:
 - `target`: "gallery"
-- `photos_directory`: null
 - `photos_scale`: 0.75
 - `images_array`: []

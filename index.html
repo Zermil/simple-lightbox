@@ -76,7 +76,34 @@
 
 <script src="./lightbox.js"></script>
 <script>
-  // images_array
+  // Sections + fetch from folder (one of many approaches)
+  async function fetchFromFolder(directory) {
+    const response = await fetch(directory);
+    const text = await response.text();
+    const textAsHtml = new DOMParser().parseFromString(text, "text/html");
+
+    return [...textAsHtml.getElementsByTagName("a")]
+      .filter(photo => photo.href.match(/\.(jpe?g|png)$/i))
+      .map(photo => photo = {
+        "src": directory + photo.pathname,
+        "alt": photo.textContent.split('.')[0]
+      });
+  }
+  
+  async function createGallery() {
+    const images_array = await fetchFromFolder("./photos/gallery-one/1");
+    const galleryOne = LBcreateGallery({ target: "gallery-one", images_array });
+
+    document.querySelectorAll(".btn").forEach(button => {
+      button.addEventListener("click", async function() {
+        galleryOne.changePhotos(await fetchFromFolder(`./photos/gallery-one/${this.textContent}`));
+      });
+    });
+  }
+  
+  createGallery();
+
+  // Standalone
   const imgArr = [
     {
       "src": "./photos/gallery-two/additional-photos/craiddo.jpg",
@@ -85,27 +112,21 @@
     {
       "src": "./photos/gallery-two/additional-photos/mountain-side.jpg",
       "alt": "mountain-side"
+    },
+    {
+      "src": "./photos/gallery-two/landscape.jpg",
+      "alt": "landscape"
+    },
+    {
+      "src": "./photos/gallery-two/river.jpg",
+      "alt": "river"
     }
   ];
 
-  // Sections
-  const galleryOne = LBcreateGallery({
-    target: "gallery-one",
-    photos_directory: "./photos/gallery-one/1"
-  });
-
-  document.querySelectorAll(".btn").forEach(button => {
-    button.addEventListener("click", function() {
-      galleryOne.changePhotosAndSwapDirectory("./photos/gallery-one/" + this.innerText);
-    });
-  });
-
-  // Standalone
   LBcreateGallery({
     target: "gallery-two",
     photos_scale: 0.4,
-    photos_directory: "./photos/gallery-two",
-    // images_array: imgArr
+    images_array: imgArr
   });
 
   // Modal
