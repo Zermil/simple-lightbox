@@ -149,8 +149,7 @@ LB.prototype._onKeyboardEvent = function(e) {
       this._prevPhoto(); 
       break;
     case "Escape":
-      LButils._closeLightboxComponent();
-      this._cleanEvents();
+      LButils._closeLightboxComponent(this._cleanEvents.bind(this));
       break;
   }
 }
