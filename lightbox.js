@@ -53,21 +53,21 @@ window.LButils = {
   },
 
   createLightboxComponent: function(element, onclose = null) {
-    const controlPanel = LButils.createTag("div", "lightbox-controlLB")
+    const controlPanel = this.createTag("div", "lightbox-controlLB")
       .LBchildren(
-        LButils.createTag("span", "lightbox-buttonLB")
+        this.createTag("span", "lightbox-buttonLB")
           .LBhtml("&times;")
           .LBclick(this._closeLightboxComponent.bind(this, onclose))
       );
 
     // Append everything
     document.body.appendChild(
-      LButils.createTag("div", "lightboxLB")
+      this.createTag("div", "lightboxLB")
         .LBclick(this._closeLightboxComponent.bind(this, onclose))
     );
     
     document.body.appendChild(
-      LButils.createTag("div", "lightbox-containerLB")
+      this.createTag("div", "lightbox-containerLB")
         .LBchildren(controlPanel, element)
     );
   },
