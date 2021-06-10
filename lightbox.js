@@ -183,7 +183,6 @@ LB.prototype._appendPhotos = function() {
 }
 
 LB.prototype._initializeGallery = function() {
-  // Error check could be improved
   const errorMessages = this._errorCheck();
 
   if (errorMessages.length) {
