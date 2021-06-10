@@ -46,18 +46,24 @@ window.LButils = {
     return element;
   },
 
+  clearDOMElement: function(element) {
+    while(element.firstChild) {
+      element.removeChild(element.firstChild);
+    }
+  },
+
   createLightboxComponent: function(element, onclose = null) {
     const controlPanel = LButils.createTag("div", "lightbox-controlLB")
       .LBchildren(
         LButils.createTag("span", "lightbox-buttonLB")
           .LBhtml("&times;")
-          .LBclick(() => this._closeLightboxComponent(onclose))
+          .LBclick(this._closeLightboxComponent.bind(this, onclose))
       );
 
     // Append everything
     document.body.appendChild(
       LButils.createTag("div", "lightboxLB")
-        .LBclick(() => this._closeLightboxComponent(onclose))
+        .LBclick(this._closeLightboxComponent.bind(this, onclose))
     );
     
     document.body.appendChild(
@@ -65,13 +71,7 @@ window.LButils = {
         .LBchildren(controlPanel, element)
     );
   },
-
-  clearDOMElement: function(element) {
-    while(element.firstChild) {
-      element.removeChild(element.firstChild);
-    }
-  },
-
+  
   _closeLightboxComponent: function(onclose = null) {
     document.body.removeChild(
       document.querySelector(".lightbox-containerLB")
@@ -80,7 +80,7 @@ window.LButils = {
     document.body.removeChild(
       document.querySelector(".lightboxLB")
     );
-
+    
     if (onclose && typeof(onclose) === "function") 
       onclose();
   }
@@ -95,8 +95,8 @@ const LBdefaults = {
 
 function LB(initializeOptions = {}) {
   this._options = Object.assign({}, LBdefaults, initializeOptions);
-  this._onResizeEvent = null;
   this._currentIndex = 0;
+  this._events = [];
 }
 
 LB.prototype._errorCheck = function() {
@@ -123,58 +123,84 @@ LB.prototype._errorCheck = function() {
   return errorMessages;
 }
 
-LB.prototype._onLighboxPhotoResize = function(lightboxPhoto) {
-  lightboxPhoto.style.cssText = `
+LB.prototype._nextPhoto = function() {
+  this._currentIndex = this._currentIndex >= this._options.images_array.length - 1 ? this._options.images_array.length - 1 : this._currentIndex + 1;
+  document.querySelector(".lightbox-photo-enlargedLB").src = this._options.images_array[this._currentIndex].src;
+}
+
+LB.prototype._prevPhoto = function() {
+  this._currentIndex = this._currentIndex <= 0 ? 0 : this._currentIndex - 1;
+  document.querySelector(".lightbox-photo-enlargedLB").src = this._options.images_array[this._currentIndex].src;
+}
+
+LB.prototype._onLighboxPhotoResize = function() {
+  document.querySelector(".lightbox-photo-enlargedLB").style.cssText = `
     max-width: ${window.innerWidth * this._options.photos_scale}px; 
     max-height: ${window.innerHeight * this._options.photos_scale}px;
   `;
 }
 
-LB.prototype._createEnlargedPhotoElement = function(from) {
+LB.prototype._onKeyboardEvent = function(e) {
+  switch(e.key) {
+    case "ArrowRight":
+      this._nextPhoto();
+      break;
+    case "ArrowLeft":
+      this._prevPhoto(); 
+      break;
+    case "Escape":
+      LButils._closeLightboxComponent();
+      this._cleanEvents();
+      break;
+  }
+}
+
+LB.prototype._appendEnlargedPhotoListeners = function() {
+  this._events.push({ type: "resize", func: (this._onLighboxPhotoResize).bind(this) });
+  this._events.push({ type: "keyup", func: (this._onKeyboardEvent).bind(this) });
+
+  for (const event of this._events) {
+    window.addEventListener(event.type, event.func);
+  }
+}
+
+LB.prototype._cleanEvents = function() {
+  for (const event of this._events) {
+    window.removeEventListener(event.type, event.func);
+  }
+
+  this._events = [];
+}
+
+LB.prototype._createEnlargedPhotoElement = function(photo) {
   const lightboxPhoto = LButils.createTag("img", "lightbox-photo-enlargedLB")
-    .LBatt({ "src": from.src, "alt": `large_${from.alt}` })
+    .LBatt({ "src": photo.src, "alt": `large_${photo.alt}` })
     .LBstyle(
       // Scale images so that they don't cover the entire screen if they are too big
       `max-width: ${window.innerWidth * this._options.photos_scale}px; 
       max-height: ${window.innerHeight * this._options.photos_scale}px;`
     );
-    
+
   const swapPanel = LButils.createTag("div", "lightbox-controlLB")
     .LBchildren(
-      LButils.createTag("span", "lightbox-buttonLB lightbox-swapLB").LBhtml("&lt;").LBclick(() => {
-        this._currentIndex = this._currentIndex <= 0 ? 0 : this._currentIndex - 1;
-        lightboxPhoto.src = this._options.images_array[this._currentIndex].src;
-      }),
-
-      LButils.createTag("span", "lightbox-buttonLB lightbox-swapLB").LBhtml("&gt;").LBclick(() => {
-        this._currentIndex = this._currentIndex >= this._options.images_array.length - 1 ? this._options.images_array.length - 1 : this._currentIndex + 1;
-        lightboxPhoto.src = this._options.images_array[this._currentIndex].src;
-      }),
+      LButils.createTag("span", "lightbox-buttonLB lightbox-swapLB prev").LBhtml("&lt;").LBclick(this._prevPhoto.bind(this)),
+      LButils.createTag("span", "lightbox-buttonLB lightbox-swapLB next").LBhtml("&gt;").LBclick(this._nextPhoto.bind(this)),
     );
-  
-  // Responsive images
-  this._onResizeEvent = (this._onLighboxPhotoResize).bind(this, lightboxPhoto);
-  window.addEventListener("resize", this._onResizeEvent);
 
-  return LButils.createTag("div").LBchildren(lightboxPhoto, swapPanel);
+  this._currentIndex = this._options.images_array.findIndex(element => element.src === photo.src);
+
+  this._appendEnlargedPhotoListeners();
+  LButils.createLightboxComponent(LButils.createTag("div").LBchildren(lightboxPhoto, swapPanel), this._cleanEvents.bind(this));
 }
 
 LB.prototype._appendPhotos = function() {
   const target = document.getElementById(this._options.target);
   const fragment = document.createDocumentFragment();
 
-  const callback = () => {
-    window.removeEventListener("resize", this._onResizeEvent);
-    this._onResizeEvent = null;
-  }
-
   for (const photo of this._options.images_array) {
     const img = LButils.createTag("img", "lightbox-photoLB")
       .LBatt({ "src": photo.src, "alt": photo.alt })
-      .LBclick(() => {
-        this._currentIndex = this._options.images_array.findIndex(element => element.src === photo.src);
-        LButils.createLightboxComponent(this._createEnlargedPhotoElement(photo), callback);
-      });
+      .LBclick(this._createEnlargedPhotoElement.bind(this, photo));
 
     fragment.appendChild(img);
   }
