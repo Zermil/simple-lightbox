@@ -29,6 +29,11 @@
   margin-right: 20px;
 }
 
+.lightbox-swap-inactiveLB {
+  color: grey;
+  opacity: 0.8;
+}
+
 .lightboxLB {
   position: fixed;
   z-index: 1;

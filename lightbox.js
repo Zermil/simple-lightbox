@@ -185,16 +185,16 @@ LB.prototype._cleanEvents = function() {
 LB.prototype._dynamicallyAddClass = function() {
   switch(this._currentIndex) {
     case this._options.images_array.length - 1:
-      document.querySelector(".nextLB").style.color = "grey";
-      document.querySelector(".prevLB").style.color = "white";
+      document.querySelector(".nextLB").classList.add("lightbox-swap-inactiveLB");
+      document.querySelector(".prevLB").classList.remove("lightbox-swap-inactiveLB");
       break;
     case 0: 
-      document.querySelector(".nextLB").style.color = "white";
-      document.querySelector(".prevLB").style.color = "grey";
+      document.querySelector(".nextLB").classList.remove("lightbox-swap-inactiveLB");
+      document.querySelector(".prevLB").classList.add("lightbox-swap-inactiveLB");
       break;
     default:
-      document.querySelector(".nextLB").style.color = "white";
-      document.querySelector(".prevLB").style.color = "white";
+      document.querySelector(".nextLB").classList.remove("lightbox-swap-inactiveLB");
+      document.querySelector(".prevLB").classList.remove("lightbox-swap-inactiveLB");
   }
 }
 
