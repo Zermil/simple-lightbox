@@ -10,6 +10,8 @@ Small JavaScript "framework", mostly for personal use, used to create small gall
 
 Photos in demo: Courtesy of [Unsplash](https://unsplash.com/)
 
+![lightbox](./lightbox.jpg)
+
 ## Quick start/Instructions
 
 I don't know why would someone want to use it, but a quick demo can be found in "[index.html](https://github.com/Zermil/simple-lightbox/blob/master/index.html)" it also has "customizable" [CSS](https://github.com/Zermil/simple-lightbox/blob/master/lightbox.css) so suit yourself. 
