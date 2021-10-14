@@ -3,9 +3,12 @@
   * DO NOT change any names here, you can stylize these 
   * classes all you want, but keep the names exactly how they are
   * otherwise funky stuff happens, also don't assign these classes
-  * to anything else on your website, also do not assign anything
-  * to classes '.nextLB' or '.prevLB'
+  * to anything else on your website.
 */
+
+.prevLB { /* LEFT  ARROW */ }
+.nextLB { /* RIGHT ARROW */ }
+
 .lightbox-photoLB {
   width: 250px;
   height: 250px;
